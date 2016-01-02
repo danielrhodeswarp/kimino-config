@@ -1,0 +1,1 @@
+this is "get-settings" for kimino config
