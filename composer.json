@@ -1,18 +1,18 @@
 {
     "name": "danielrhodeswarp/kimino-config",
-    "description": ":package_description",
+    "description": "Easy, pluginable, configuration setting and getting for Laravel projects",
     "keywords": [
-        ":vendor",
-        ":package_name"
+        "laravel",
+        "config",
+        "configuration"
     ],
-    "homepage": "https://github.com/:vendor/:package_name",
+    "homepage": "https://github.com/danielrhodeswarp/kimino-config",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": ":author_email",
-            "homepage": ":author_website",
-            "role": "Developer"
+            "name": "Daniel Rhodes",
+            "email": "daniel.rhodes@warpasylum.co.uk"
+            
         }
     ],
     "require": {
