@@ -69,7 +69,7 @@ You won't have any settings yet. As a test you can add some dummy settings with 
 Settings have four fields in the database (and also an auto-incrementing id field):
 
 | Field | Can be null? | Description |
-| -- | -- | -- |
+| ------------- | ------------- | ------------- |
 | setting | no | Name of setting. Words separated by underscores and must contain at least one underscore. Like `something_or_other`. Settings are grouped on the HTML form by *prefix* which is the word before the first underscore. |
 | value | no  | Value of setting. Will be empty string, any string or - if valid_values is not empty - one of the strings in valid_values |
 | valid_values | yes | If empty, then the setting is free text. If set to a comma-separated (no spaces) list of words, then the setting value can only be one of those words (and this will be enforced when updating values with the HTML form or the Artisan command). |
