@@ -17,15 +17,27 @@ It's good for implementation preparedness around project specification that you 
 * Commented and cleaned up the code
 * Views, config and publics are publishable with vendor:publish (together or individually)
 
+## What does it come with?
+
+* Migration for the settings table (you need to run this!)
+* Optional Artisan command to seed some example settings
+* Controller, routing and view to see and update settings on an HTML form
+* Above form view is publishable into your project
+* Publishable config file
+* vanilla or Foundation HTML view (Foundation assets need to be published)
+* Artisan command to view all / certain settings
+* Artisan command to update a setting
+
 ## How do I install this thing?
 
 1. `composer require danielrhodeswarp/kimino-config` in your Laravel 5 project's home folder. (Or you can add `danielrhodeswarp/kimino-config` to your project's composer.json file - and then run `composer install` - if you know what you are doing.)
 2. In the `'providers'` bit of your project's config/app.php file add `Danielrhodeswarp\KiminoConfig\KiminoConfigServiceProvider::class`.
 3. `php artisan migrate --path=vendor/danielrhodeswarp/kimino-config/src/database/migrations` to run the migration to create the kimino_configs table.
+4. (If you want to override package config it's `php artisan vendor:publish --tag=config`. If you want to edit the views it's `php artisan vendor:publish --tag=views`. If you want to override the config to use the Foundation view it's `php artisan vendor:publish --tag=public`. Or of course publish everything with `php artisan vendor:publish`. Note that Kimino Config will work, using defaults,  without publishing anything.)
 
 ## How do I give it a quick check?
 
-After installation, your-project.url/kimino-config will now show the only view that Kimino Config has - a page to view **all** the settings in the database and to edit any of their values if necessary.
+After installation, your-project.url/kimino-config will now show the only view that Kimino Config has - a page to view **all** the settings in the database and to update any of their values if necessary.
 
 You won't have any settings yet. As a test you can add some dummy settings with `php artisan kimino:seed-examples`.
 
@@ -33,10 +45,11 @@ You won't have any settings yet. As a test you can add some dummy settings with 
 
 | Setting  | Value | Valid values |
 | ------------- | ------------- | ------------- |
-| something_trial_months  | 6  |            |
-| something_auth_method  | digest  | basic,digest           |
-| other_news | no | yes,no |
 | other_leg | arbitrary-value | |
+| other_news | no | yes,no |
+| something_auth_method  | digest  | basic,digest           |
+| something_trial_months  | 6  |            |
+
 
 `php artisan kimino:get-config other_news`  will dump out the specified setting, like:
 
@@ -55,12 +68,12 @@ You won't have any settings yet. As a test you can add some dummy settings with 
 
 Settings have four fields in the database (and also an auto-incrementing id field):
 
-Field | Can be null? | Description
--- | -- | --
-setting | no | Name of setting. Words separated by underscores and must contain at least one underscore. Like `something_or_other`. Settings are grouped on the HTML form by *prefix* which is the word before the first underscore.
-value | no (but?) | Value of setting. Will be empty string, any string or - if valid_values is not empty - one of the strings in valid_values
-valid_values | yes | If empty, then the setting is free text. If set to a comma-separated (no spaces) list of words, then the setting value can only be one of those words (and this will be enforced when updating values with the HTML form or the Artisan command).
-user_hint | yes | A human friendly explanation of the setting for whosoever might be tinkering with it on the HTML form
+| Field | Can be null? | Description |
+| -- | -- | -- |
+| setting | no | Name of setting. Words separated by underscores and must contain at least one underscore. Like `something_or_other`. Settings are grouped on the HTML form by *prefix* which is the word before the first underscore. |
+| value | no  | Value of setting. Will be empty string, any string or - if valid_values is not empty - one of the strings in valid_values |
+| valid_values | yes | If empty, then the setting is free text. If set to a comma-separated (no spaces) list of words, then the setting value can only be one of those words (and this will be enforced when updating values with the HTML form or the Artisan command). |
+| user_hint | yes | A human friendly explanation of the setting for whosoever might be tinkering with it on the HTML form |
 
 ## How do I add my own settings?
 
@@ -208,34 +221,34 @@ class SomeClassInYourProject
 ```
 
 You can of course use a smelly old switch / case instead.
-## What does it come with?
 
-* Migration for the settings table (you need to run this!)
-* Optional Artisan command to seed some example settings
-* Controller, routing and view to see and update settings on an HTML form
-* Above form view is publishable into your project
-* Artisan command to view all / certain settings
-* Artisan command to update a setting
 
-## NOTE
+## Sounds great so far. Any gotchas to keep in mind?
 
-Kimino Config purposefully does not interact with Laravel's config/ folder or dotenv stuff.
+- Kimino Config purposefully does not interact with Laravel's config/ folder or dotenv stuff.
 I see those settings as more infrastructural / servery / DevOpsish.
 
-Can't *add* a setting automatically via form or console.
+- Can't *add* a setting automatically via form or console.
 
-## TODO
+## What's next on your TODO list?
 
 
-* Config for setting name separator
-* Config for include_prefix_on_html_form_view
+* Implement config for setting name separator
+* Implement config for include_prefix_on_html_form_view
 * Check if actually working in Laravel 5.0 and 5.1 (5.2 definitely OK)
 * Check for BaseController of main including app (for security gates etc)
 * Should probably make the migration publishable as well
 * /vendor folder (and composer require?) for bundled Foundation stuff
 * View for Twitter Bootstrap
+* Session message after submitting form
+* Document the KiminoConfig::withPrefix('prefix') local scope
+* P'raps document some general examples of getting and looping through KiminoConfigs in a Laravel stylee
 
-## Musings
+## What's bugging you?
 
 * Namespacing issues around a db:seed in a Composer package for Laravel...
 * Seemingly can't introduce $variables in the `return "<?php ... ?>"` bit of Blade::directive()
+
+## Why is everything in this readme a question?
+
+Why not? :D
