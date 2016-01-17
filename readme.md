@@ -12,8 +12,10 @@ It's good for implementation preparedness around project specification that you 
 ## So what's new in v0.0.5?
 
 * Documentation
-* Improved views
-* Commented and cleaned up the code somewhat
+* Improved vanilla view
+* Added Foundation view
+* Commented and cleaned up the code
+* Views, config and publics are publishable with vendor:publish (together or individually)
 
 ## How do I install this thing?
 
@@ -229,8 +231,9 @@ Can't *add* a setting automatically via form or console.
 * Config for include_prefix_on_html_form_view
 * Check if actually working in Laravel 5.0 and 5.1 (5.2 definitely OK)
 * Check for BaseController of main including app (for security gates etc)
-* Prettier form view (Bootstrap and / or Foundation etc etc)
-* General code cleanup
+* Should probably make the migration publishable as well
+* /vendor folder (and composer require?) for bundled Foundation stuff
+* View for Twitter Bootstrap
 
 ## Musings
 
