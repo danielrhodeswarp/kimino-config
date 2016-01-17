@@ -2,9 +2,18 @@
 
 namespace Danielrhodeswarp\KiminoConfig\Console\Commands;
 
-use \Illuminate\Console\Command;
+use Illuminate\Console\Command;
+
 use Danielrhodeswarp\KiminoConfig\KiminoConfig;
 
+/**
+ * Artisan command to seed some example settings
+ * 
+ * @package    kimino-config (https://github.com/danielrhodeswarp/kimino-config)
+ * @author     Daniel Rhodes <daniel.rhodes@warpasylum.co.uk>
+ * @copyright  Copyright (c) 2016 Daniel Rhodes
+ * @license    see LICENCE file in source code root folder     The MIT License
+ */
 class SeedExamples extends Command
 {
     /**
@@ -49,11 +58,10 @@ class SeedExamples extends Command
                 'value' => 'arbitrary-value',
                 'valid_values' => null,
                 'user_hint' => 'Pull the other leg'
-            ],
-
-
+            ]
         ];
         
+        //loop through and save 'em
         foreach ($settings as $name => $setting) {
             $config = new KiminoConfig();
             
@@ -65,6 +73,7 @@ class SeedExamples extends Command
             $config->save();
         }
         
+        //report
         $this->info('All done');
     }
 }

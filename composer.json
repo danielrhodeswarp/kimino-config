@@ -1,10 +1,13 @@
 {
     "name": "danielrhodeswarp/kimino-config",
-    "description": "Easy, pluginable, configuration setting and getting for Laravel projects",
+    "description": "Easy configuration setting and getting for Laravel projects",
     "keywords": [
         "laravel",
         "config",
-        "configuration"
+        "configuration",
+        "settings",
+        "administrator",
+        "application"
     ],
     "homepage": "https://github.com/danielrhodeswarp/kimino-config",
     "license": "MIT",

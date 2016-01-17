@@ -5,6 +5,14 @@ namespace Danielrhodeswarp\KiminoConfig;
 use Illuminate\Support\ServiceProvider;
 use Blade;
 
+/**
+ * Laravel ServiceProvider to glue KiminoConfig's services into the main project
+ * 
+ * @package    kimino-config (https://github.com/danielrhodeswarp/kimino-config)
+ * @author     Daniel Rhodes <daniel.rhodes@warpasylum.co.uk>
+ * @copyright  Copyright (c) 2016 Daniel Rhodes
+ * @license    see LICENCE file in source code root folder     The MIT License
+ */
 class KiminoConfigServiceProvider extends ServiceProvider
 {
     /**
@@ -20,17 +28,28 @@ class KiminoConfigServiceProvider extends ServiceProvider
         //the views
         $this->loadViewsFrom(__DIR__ . '/resources/views', 'kimino-config');
 
-        //make views publishable
+        //make views publishable (and give specific tag of 'views')
         $this->publishes([
             __DIR__ . '/resources/views' => resource_path('views/vendor/kimino-config'),
-        ]);
+        ], 'views');
         
+        //make config publishable (and give specific tag of 'config')
+        $this->publishes([
+            __DIR__ . '/config/kimino.php' => config_path('kimino.php'),
+        ], 'config');
+        
+        //make public assets publishable (and give specific tag of 'public')
+        $this->publishes([
+            __DIR__ . '/public' => public_path('vendor/kimino-config'),
+        ], 'public');
+        
+        //NOTE we can actually make migrations publishable as well
+        
+        //NOTE not in use and not working
         //our Blade extensions
         //interestingly, and I guess this is an anti-eval technique, $kiminoConfig
-        //will be a literal '($setting)' here. So use with() helper judiciously!
+        //will be a literal '($setting)' here. So use the with() helper judiciously!
         Blade::directive('kiminoinput', function($kiminoConfig) {
-            
-            
             
             //render as radio button if a range of valid values is set
             //ELSE text input
@@ -77,5 +96,10 @@ PHP;
             \Danielrhodeswarp\KiminoConfig\Console\Commands\GetConfig::class,
             \Danielrhodeswarp\KiminoConfig\Console\Commands\SeedExamples::class,
             ]);
+        
+        //let 'em override *individual* things in their copy of the kimino.php config file
+        $this->mergeConfigFrom(
+            __DIR__ . '/config/kimino.php', 'kimino'    //not actually sure what the second parm is for here...
+        );
     }
 }

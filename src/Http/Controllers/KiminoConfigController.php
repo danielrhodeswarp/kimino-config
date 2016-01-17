@@ -2,20 +2,31 @@
 
 namespace Danielrhodeswarp\KiminoConfig\Http\Controllers;
 
-use \Illuminate\Routing\Controller as Controller;
-use \Illuminate\Http\Request;
-use Danielrhodeswarp\KiminoConfig\KiminoConfig;
-//use \DB;
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Http\Request;
 
+use Danielrhodeswarp\KiminoConfig\KiminoConfig;
+
+/**
+ * Controller for viewing and updating settings
+ * 
+ * @package    kimino-config (https://github.com/danielrhodeswarp/kimino-config)
+ * @author     Daniel Rhodes <daniel.rhodes@warpasylum.co.uk>
+ * @copyright  Copyright (c) 2016 Daniel Rhodes
+ * @license    see LICENCE file in source code root folder     The MIT License
+ */
 class KiminoConfigController extends Controller	//TODO extend from main app's BaseController if we have that
 {
+	/**
+	 * Show view page / update form for settings
+	 *
+	 * @author Daniel Rhodes <daniel.rhodes@warpasylum.co.uk>
+	 */
 	public function getSettings()
 	{
 		try
 		{
 			$settings = KiminoConfig::all()->sortBy('setting');
-			//$settings = DB::table('kimino_configs')->orderBy('setting', 'asc');
-			//DUMP($settings);
 		}
 		
 		catch(\Exception $exception)
@@ -25,7 +36,7 @@ class KiminoConfigController extends Controller	//TODO extend from main app's Ba
 				Did you run the migration file supplied in the kimino-config package?
 				(php artisan migrate --path=vendor/danielrhodeswarp/kimino-config/src/database/migrations)");
 		}
-
+		
 		//group settings by prefix
 		$groupedSettings = [];
 		
@@ -36,14 +47,21 @@ class KiminoConfigController extends Controller	//TODO extend from main app's Ba
 			$groupedSettings[$prefix][] = $setting;
 		}
 		
-		//return "this is kimino config";
-		return view('kimino-config::get-settings', ['groupedSettings' => $groupedSettings]);
+		//return appropriate "kimino config" page
+		$viewName = config('kimino.frontend') . '.get-settings';
+		return view("kimino-config::{$viewName}", ['groupedSettings' => $groupedSettings]);
 	}
 
+	/**
+	 * Handle form submit from view page / update form for settings
+	 *
+	 * @author Daniel Rhodes <daniel.rhodes@warpasylum.co.uk>
+	 */
 	public function postSettings(Request $request)
 	{
 		foreach($request->input('setting') as $setting => $value)
 		{
+			//first() is safe here as "setting" column is UNIQUE in the database
 			$config = KiminoConfig::where('setting', $setting)->first();
 			
 			$config->value = $value;
@@ -51,6 +69,8 @@ class KiminoConfigController extends Controller	//TODO extend from main app's Ba
 			$config->save();
 		}
 		
-		return redirect()->action('\Danielrhodeswarp\KiminoConfig\Http\Controllers\KiminoConfigController@getSettings');
+		//redirect to "kimino config" page
+		//TODO get flashed session messages working (prob something to do with routing groups and middleware etc)
+		return redirect()->action('\Danielrhodeswarp\KiminoConfig\Http\Controllers\KiminoConfigController@getSettings')->with('message', 'Settings updated successfully');
 	}
 }

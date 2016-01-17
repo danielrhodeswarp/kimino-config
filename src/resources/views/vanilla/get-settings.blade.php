@@ -1,4 +1,25 @@
-<h1>This is "get-settings" for kimino config</h1>
+{{--
+ **
+ * Vanilla view for Kimino Config
+ * 
+ * @package    kimino-config (https://github.com/danielrhodeswarp/kimino-config)
+ * @author     Daniel Rhodes <daniel.rhodes@warpasylum.co.uk>
+ * @copyright  Copyright (c) 2016 Daniel Rhodes
+ * @license    see LICENCE file in source code root folder     The MIT License
+ *
+ --}}
+
+<!doctype html>
+<html>
+<head>
+    <title>Kimino Config</title>
+</head>
+<body>
+<h1>Kimino Config</h1>
+
+@if (session('message'))
+    <p>{{ session('message') }}</p>
+@endif
 
 @if (empty($groupedSettings))
     <p>No settings found. This is probably A Bad Thing.
@@ -6,7 +27,7 @@
 @else
     <form action="{{ action('\Danielrhodeswarp\KiminoConfig\Http\Controllers\KiminoConfigController@postSettings') }}" method="post">
         @foreach ($groupedSettings as $group => $settings)
-            <fieldset>
+            <fieldset style="width:80%; margin-bottom:1em;">
             
             <legend>{{ ucfirst($group) }}</legend>
             @foreach ($settings as $setting) 
@@ -19,11 +40,10 @@
             </fieldset>
         @endforeach
         {{ csrf_field() }}
-        <input type="submit" value="Update settings">
+        <div style="width:80%;">
+            <input type="submit" value="Update" style="float:right;">
+        </div>
     </form>
 @endif
-
-
-    
-
-
+</body>
+</html>

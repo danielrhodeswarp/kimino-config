@@ -2,9 +2,18 @@
 
 namespace Danielrhodeswarp\KiminoConfig\Console\Commands;
 
-use \Illuminate\Console\Command;
+use Illuminate\Console\Command;
+
 use Danielrhodeswarp\KiminoConfig\KiminoConfig;
 
+/**
+ * Artisan command to dump out a specific - or all - settings
+ * 
+ * @package    kimino-config (https://github.com/danielrhodeswarp/kimino-config)
+ * @author     Daniel Rhodes <daniel.rhodes@warpasylum.co.uk>
+ * @copyright  Copyright (c) 2016 Daniel Rhodes
+ * @license    see LICENCE file in source code root folder     The MIT License
+ */
 class GetConfig extends Command
 {
     /**
@@ -28,18 +37,32 @@ class GetConfig extends Command
      */
     public function handle()
     {
+        //get the input
         $setting = $this->argument('setting');
         
-        //TODO exception catching for if table not exist etc
+        //----exception catching for if table not exist etc
+        try
+        {
+            $firstSetting = KiminoConfig::first();
+        }
+        
+        catch(\Exception $exception)
+        {
+            $this->error("Oh dear, something went wrong. I probably couldn't find the kimino_configs database table. Did you run the migration file supplied in the kimino-config package? (php artisan migrate --path=vendor/danielrhodeswarp/kimino-config/src/database/migrations)");
+            exit(1);    //non-zero
+        }
+        //----/end exception catching for if table not exist etc
+        
+        //----get setting(s)
         
         //get all if $setting is null
         $settingsToShow = '';
         if(is_null($setting))
         {
-            $settingsToShow = KiminoConfig::all();//->orderBy('setting', 'asc');
+            $settingsToShow = KiminoConfig::all()->sortBy('setting');
         }
         
-        else
+        else    //try to get specified setting
         {
             try
             {
@@ -52,21 +75,20 @@ class GetConfig extends Command
                 exit(1);    //non-zero
             }
         }
+        //----/end get setting(s)
         
-        //DUMP(get_class($settingsToShow));
-        
-        //summary report
+        //----dump setting(s) out as table
         $dataRows = [];
 
         foreach ($settingsToShow as $oneSetting) {
             $dataRows[] = [$oneSetting->setting, $oneSetting->value, $oneSetting->valid_values];
-            //do summat with user_hint?
+            //TODO possibly also show user_hint based on --verbose
         }
         
         $this->table(
             ['Setting', 'Value', 'Valid values'],
             $dataRows
         );
-        
+        //----/end dump setting(s) out as table
     }
 }
