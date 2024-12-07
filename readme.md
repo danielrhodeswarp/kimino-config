@@ -1,4 +1,4 @@
-# Kimino Config
+# kimino-config
 
 ## Sounds weird. What is it?
 
